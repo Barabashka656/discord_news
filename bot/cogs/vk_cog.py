@@ -18,8 +18,6 @@ from discord.ext import (
 
 
 class VkCog(commands.Cog):
-    """Music cog to hold Wavelink related commands and listeners."""
-    
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
