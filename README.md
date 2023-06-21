@@ -1,2 +1,2 @@
-# discord-music-bot
-discord music bot using py-cord
+# discord-news
+discord bot to posting from vk group
