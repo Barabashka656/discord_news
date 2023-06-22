@@ -10,7 +10,8 @@ from bot.data.config import (
     CHANNEL_ID,
     APP_ID,
     IP_TOKEN,
-    USER_AGENT
+    USER_AGENT,
+    PROXY_ADDRESS
 )
 import aiohttp
 import json
@@ -49,16 +50,13 @@ class VkCog(commands.Cog):
         headers = {
             'User-Agent': USER_AGENT    
         }
-        session = requests.Session()
-        session.proxies.update(proxies)
-        session.proxies.update(headers)
         vk_session: vk_api.VkApi = vk_api.VkApi(login=VK_LOGIN, 
                                                 password=VK_PASSWORD
                                                 )
 
         vk_session.http.headers['User-agent'] = USER_AGENT
-        vk_session.http.proxies['http'] = 'http://195.19.250.2:3126'
-        vk_session.http.proxies['https'] = 'http://195.19.250.2:3126'
+        vk_session.http.proxies['http'] = PROXY_ADDRESS
+        vk_session.http.proxies['https'] = PROXY_ADDRESS
 
             
         

@@ -16,7 +16,7 @@ VK_GROUP_ID = os.getenv('VK_GROUP_ID')
 APP_ID = os.getenv('APP_ID')
 USER_AGENT = os.getenv('USER_AGENT')
 IP_TOKEN = os.getenv('IP_TOKEN')
-
+PROXY_ADDRESS = 'http://' + os.getenv('PROXY_ADDRESS')
 COGS_FOLDER = os.getenv('COGS_FOLDER')
 LOGS_FOLDER = os.getenv('LOGS_FOLDER')
 
