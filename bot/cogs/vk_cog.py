@@ -1,4 +1,6 @@
 import io
+import requests
+
 
 from bot.data.config import (
     VK_LOGIN,
@@ -6,7 +8,8 @@ from bot.data.config import (
     VK_GROUP_ID,
     VK_TOKEN,
     CHANNEL_ID,
-    APP_ID
+    APP_ID,
+    USER_AGENT
 )
 import aiohttp
 import json
@@ -38,11 +41,20 @@ class VkCog(commands.Cog):
 
 
     def connect_to_vk(self):
+        proxies = {
+        'http': 'http://194.158.203.14:80'
+        }
+        headres = {
+            'User-Agent': USER_AGENT    
+        }
+        session = requests.Session()
+        session.proxies.update(proxies)
         vk_session: vk_api.VkApi = vk_api.VkApi(login=VK_LOGIN, 
                                                 token=VK_TOKEN, 
                                                 password=VK_PASSWORD, 
                                                 app_id=APP_ID, 
-                                                scope=73728)
+                                                scope=73728,
+                                                session=session)
         #vk_session: vk_api.VkApi = vk_api.VkApi(
         #    login=VK_LOGIN, 
         #    password=VK_PASSWORD, 
