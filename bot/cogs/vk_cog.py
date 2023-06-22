@@ -19,7 +19,7 @@ from discord.ext import (
     commands,
     tasks
 )
-
+from bs4 import BeautifulSoup
 
 
     
@@ -27,13 +27,13 @@ class VkCog(commands.Cog):
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.channel: discord.channel.TextChannel = 123
+        self.channel: discord.channel.TextChannel | discord.TextChannel = 123
 
         self.vk: vk_api.VkApi = self.connect_to_vk()
+        self._count = 0
         self.vk_group = self.vk_group_id(VK_GROUP_ID)
-
-        post = self.vk.wall.get(owner_id=VK_GROUP_ID, count=2)
-        self.last_post = post.get('items')[1].get('hash')
+        post = self.vk.wall.get(owner_id=VK_GROUP_ID, count=self._count+2)
+        self.last_post = post.get('items')[self._count+1].get('hash')
         with open("file2.txt", 'w') as f:
             f.write(json.dumps(post))
 
@@ -42,21 +42,28 @@ class VkCog(commands.Cog):
 
     def connect_to_vk(self):
         proxies = {
-        'http': 'https://31.44.82.2:3128'
+            'http': 'http://31.44.82.2:3128',
+            'https': 'http://31.44.82.2:3128'
         }
-        headres = {
+        headers = {
             'User-Agent': USER_AGENT    
         }
         session = requests.Session()
         session.proxies.update(proxies)
-        session.proxies.update(headres)
+        session.proxies.update(headers)
         vk_session: vk_api.VkApi = vk_api.VkApi(login=VK_LOGIN, 
-                                                token=VK_TOKEN, 
-                                                password=VK_PASSWORD,
-                                                scope=73728
+                                                password=VK_PASSWORD
                                                 )
+
         vk_session.http.headers['User-agent'] = USER_AGENT
-        vk_session.http.proxies['http'] = 'https://31.44.82.2:3128'
+        vk_session.http.proxies['http'] = 'http://31.44.82.2:3128'
+        vk_session.http.proxies['https'] = 'http://31.44.82.2:3128'
+
+        
+        response = requests.get(url="https://api.ipify.org", headers=headers, proxies=proxies)
+        print(response.text)
+        
+        
         #vk_session: vk_api.VkApi = vk_api.VkApi(
         #    login=VK_LOGIN, 
         #    password=VK_PASSWORD, 
@@ -79,13 +86,17 @@ class VkCog(commands.Cog):
         if not self.bot.is_ready():
             return
         print('a2')
-        response = self.vk.wall.get(owner_id=VK_GROUP_ID, count=1).get('items')[0]
+        response = self.vk.wall.get(owner_id=VK_GROUP_ID, count=self._count+1).get('items')[self._count]
         if response.get('hash') == self.last_post:
             return
         print('a3')
+        print(response)
         self.last_post = response.get('hash')
+        if response.get('copy_history'):
+            return 
         response_text = response.get('text')
         photo_urls = []
+        video_urls = []
         attachment_list = response.get('attachments')
         print('a4', response_text)
         for i, attachment in enumerate(attachment_list):
@@ -98,8 +109,34 @@ class VkCog(commands.Cog):
                             photo_urls.append(photo.get('url'))
                         photo_urls[i] = photo.get('url')
                         max_size = photo.get('width')
-        files = [1]
+            if attachment.get('type') == 'video':
+                video_obj = attachment.get('video')
+                owner_id = video_obj.get('owner_id')
+                video_id = video_obj.get('id')
+                access_key = video_obj.get('access_key')
+                video = self.vk.video.get(videos=f'{owner_id}_{video_id}_{access_key}')
+                print(video)
+                print(video.get('items')[0])
+                print(video.get('items')[0].get('player'))
+                video_urls.append(video.get('items')[0].get('player'))
         print('a5')
+        files = 1
+        flag = 1
+        photo_files = []
+        while photo_urls or video_urls:
+            if video_urls:
+                await self.channel.send(content=response_text, video=video_urls.pop())
+            if photo_urls:
+                photo = await self.send_photo_by_url(photo_urls.pop())
+                photo_files.append(photo)
+        
+        if len(photo_files) == 1:
+            await self.channel.send(content=response_text, file=photo_files[0])
+        elif len(photo_files) > 1:
+            await self.channel.send(content=response_text, files=photo_files)
+        else:
+            print(photo_files, photo_files, response_text)
+        return
         if len(files) == 1:
             print('a6')
             await self.get_file_by_url(photo_urls[0], response_text)
@@ -108,7 +145,7 @@ class VkCog(commands.Cog):
             pass
             #await self.channel.send(fcontent=response_text, files=files)
 
-    async def get_file_by_url(self, url, response_text):
+    async def send_photo_by_url(self, url, response_text=None):
         print('a7')
         async with aiohttp.ClientSession() as session:
             print('a8')
@@ -119,7 +156,12 @@ class VkCog(commands.Cog):
                     rs = await r.read()
                     with io.BytesIO(rs) as file: # converts to file-like object
                         print('a11')
+                        return discord.File(file,  "testimage.png")
                         await self.channel.send(content=response_text, file=discord.File(file,  "testimage.png"))
+                        #if response_text:
+                        #    await self.channel.send(content=response_text, file=discord.File(file,  "testimage.png"))
+                        #else:
+                        #    await self.channel.send(file=discord.File(file,  "testimage.png"))
 
 def captcha_handler(captcha):
     key = input("Enter captcha code {0}: ".format(captcha.get_url())).strip()
