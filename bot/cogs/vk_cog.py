@@ -5,7 +5,8 @@ from bot.data.config import (
     VK_PASSWORD,
     VK_GROUP_ID,
     VK_TOKEN,
-    CHANNEL_ID
+    CHANNEL_ID,
+    APP_ID
 )
 import aiohttp
 import json
@@ -37,7 +38,11 @@ class VkCog(commands.Cog):
 
 
     def connect_to_vk(self):
-        vk_session: vk_api.VkApi = vk_api.VkApi(login=VK_LOGIN, token=VK_TOKEN, password=VK_PASSWORD)
+        vk_session: vk_api.VkApi = vk_api.VkApi(login=VK_LOGIN, 
+                                                token=VK_TOKEN, 
+                                                password=VK_PASSWORD, 
+                                                app_id=APP_ID, 
+                                                scope=73728)
         #vk_session: vk_api.VkApi = vk_api.VkApi(
         #    login=VK_LOGIN, 
         #    password=VK_PASSWORD, 

@@ -13,6 +13,7 @@ VK_TOKEN = os.getenv('VK_TOKEN')
 VK_LOGIN = os.getenv('VK_LOGIN')
 VK_PASSWORD = os.getenv('VK_PASSWORD')
 VK_GROUP_ID = os.getenv('VK_GROUP_ID')
+APP_ID = os.getenv('APP_ID')
 
 COGS_FOLDER = os.getenv('COGS_FOLDER')
 LOGS_FOLDER = os.getenv('LOGS_FOLDER')
