@@ -9,6 +9,7 @@ from bot.utils.my_logger import configure_logger
 
 def main():
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    logging.exception(os.path.abspath(__file__))
     
     configure_logger()
     logging.exception(ROOT_DIR)
