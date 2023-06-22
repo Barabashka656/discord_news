@@ -11,4 +11,6 @@ def load_cogs(ROOT_DIR):
     print(dir)
     for name in os.listdir(os.path.join(ROOT_DIR, 'bot', 'cogs')):
         if name.endswith(".py") and os.path.isfile(os.path.join(COGS_FOLDER, name)):
+            print(name)
+            print(f"bot.cogs.{name[:-3]}")
             bot.load_extension(f"bot.cogs.{name[:-3]}")
