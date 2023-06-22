@@ -17,6 +17,8 @@ from discord.ext import (
 )
 
 
+
+    
 class VkCog(commands.Cog):
 
     def __init__(self, bot: commands.Bot):
@@ -35,7 +37,11 @@ class VkCog(commands.Cog):
 
 
     def connect_to_vk(self):
-        vk_session: vk_api.VkApi = vk_api.VkApi(VK_LOGIN, VK_PASSWORD)
+        vk_session: vk_api.VkApi = vk_api.VkApi(
+            login=VK_LOGIN, 
+            password=VK_PASSWORD, 
+            captcha_handler=captcha_handler
+        )
         vk_session.auth()
         return vk_session.get_api()
     
@@ -95,6 +101,9 @@ class VkCog(commands.Cog):
                         print('a11')
                         await self.channel.send(content=response_text, file=discord.File(file,  "testimage.png"))
 
+def captcha_handler(captcha):
+    key = input("Enter captcha code {0}: ".format(captcha.get_url())).strip()
+    return captcha.try_again(key)
 
 def setup(bot: commands.Bot):
     bot.add_cog(VkCog(bot))
