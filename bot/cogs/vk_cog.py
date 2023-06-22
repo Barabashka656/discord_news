@@ -42,25 +42,27 @@ class VkCog(commands.Cog):
 
     def connect_to_vk(self):
         proxies = {
-        'http': 'http://194.158.203.14:80'
+        'http': 'https://31.44.82.2:3128'
         }
         headres = {
             'User-Agent': USER_AGENT    
         }
         session = requests.Session()
         session.proxies.update(proxies)
+        session.proxies.update(headres)
         vk_session: vk_api.VkApi = vk_api.VkApi(login=VK_LOGIN, 
                                                 token=VK_TOKEN, 
-                                                password=VK_PASSWORD, 
-                                                app_id=APP_ID, 
-                                                scope=73728,
-                                                session=session)
+                                                password=VK_PASSWORD,
+                                                scope=73728
+                                                )
+        vk_session.http.headers['User-agent'] = USER_AGENT
+        vk_session.http.proxies['http'] = 'https://31.44.82.2:3128'
         #vk_session: vk_api.VkApi = vk_api.VkApi(
         #    login=VK_LOGIN, 
         #    password=VK_PASSWORD, 
         #    captcha_handler=captcha_handler
         #)
-        vk_session.auth()
+        vk_session.auth(token_only=True)
         return vk_session.get_api()
     
     def vk_group_id(self, vk_group_id):
