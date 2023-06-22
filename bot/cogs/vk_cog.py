@@ -21,10 +21,11 @@ class VkCog(commands.Cog):
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.vk: vk_api.VkApi = self.connect_to_vk()
-
         self.channel: discord.channel.TextChannel = 123
+
+        self.vk: vk_api.VkApi = self.connect_to_vk()
         self.vk_group = self.vk_group_id(VK_GROUP_ID)
+
         post = self.vk.wall.get(owner_id=VK_GROUP_ID, count=2)
         self.last_post = post.get('items')[1].get('hash')
         with open("file2.txt", 'w') as f:
@@ -47,20 +48,19 @@ class VkCog(commands.Cog):
 
     @tasks.loop(seconds=5)
     async def get_last_post(self):
-
+        print('a1')
         if not self.bot.is_ready():
             return
-   
-        
+        print('a2')
         response = self.vk.wall.get(owner_id=VK_GROUP_ID, count=1).get('items')[0]
         if response.get('hash') == self.last_post:
-          
             return
-        
+        print('a3')
         self.last_post = response.get('hash')
         response_text = response.get('text')
         photo_urls = []
         attachment_list = response.get('attachments')
+        print('a4', response_text)
         for i, attachment in enumerate(attachment_list):
             if attachment.get('type') == 'photo':
                 max_size = 0
@@ -71,30 +71,29 @@ class VkCog(commands.Cog):
                             photo_urls.append(photo.get('url'))
                         photo_urls[i] = photo.get('url')
                         max_size = photo.get('width')
-                        
-        
-    
         files = [1]
-        
+        print('a5')
         if len(files) == 1:
+            print('a6')
             await self.get_file_by_url(photo_urls[0], response_text)
         else:
+            print('a6.1')
             pass
             #await self.channel.send(fcontent=response_text, files=files)
 
     async def get_file_by_url(self, url, response_text):
-      
+        print('a7')
         async with aiohttp.ClientSession() as session:
-           
+            print('a8')
             async with session.get(url) as r:
-              
+                print('a9')
                 if r.status == 200:
-                  
+                    print('a10')
                     rs = await r.read()
                     with io.BytesIO(rs) as file: # converts to file-like object
+                        print('a11')
                         await self.channel.send(content=response_text, file=discord.File(file,  "testimage.png"))
 
-                    
 
 def setup(bot: commands.Bot):
     bot.add_cog(VkCog(bot))
