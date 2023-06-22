@@ -44,6 +44,7 @@ class VkCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        print("ready")
         self.channel = self.bot.get_channel(CHANNEL_ID)
 
     @tasks.loop(seconds=5)
