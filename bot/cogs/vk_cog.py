@@ -9,6 +9,7 @@ from bot.data.config import (
     VK_TOKEN,
     CHANNEL_ID,
     APP_ID,
+    IP_TOKEN,
     USER_AGENT
 )
 import aiohttp
@@ -56,12 +57,15 @@ class VkCog(commands.Cog):
                                                 )
 
         vk_session.http.headers['User-agent'] = USER_AGENT
-        vk_session.http.proxies['http'] = 'http://31.44.82.2:3128'
-        vk_session.http.proxies['https'] = 'http://31.44.82.2:3128'
+        vk_session.http.proxies['http'] = 'http://195.19.250.2:3126'
+        vk_session.http.proxies['https'] = 'http://195.19.250.2:3126'
 
+            
         
-        response = requests.get(url="https://api.ipify.org", headers=headers, proxies=proxies)
-        print(response.text)
+        response_1 = vk_session.http.get(f'https://ipinfo.io/json?token={IP_TOKEN}')
+        print(response_1.text)
+        #response = requests.get(url="https://api.ipify.org", headers=headers, proxies=proxies)
+       
         
         
         #vk_session: vk_api.VkApi = vk_api.VkApi(
