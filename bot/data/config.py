@@ -9,6 +9,7 @@ from dotenv import (
 load_dotenv(find_dotenv())
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 
+VK_TOKEN = os.getenv('VK_TOKEN')
 VK_LOGIN = os.getenv('VK_LOGIN')
 VK_PASSWORD = os.getenv('VK_PASSWORD')
 VK_GROUP_ID = os.getenv('VK_GROUP_ID')

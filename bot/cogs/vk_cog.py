@@ -4,7 +4,7 @@ from bot.data.config import (
     VK_LOGIN,
     VK_PASSWORD,
     VK_GROUP_ID,
-    GUILD_ID,
+    VK_TOKEN,
     CHANNEL_ID
 )
 import aiohttp
@@ -37,11 +37,12 @@ class VkCog(commands.Cog):
 
 
     def connect_to_vk(self):
-        vk_session: vk_api.VkApi = vk_api.VkApi(
-            login=VK_LOGIN, 
-            password=VK_PASSWORD, 
-            captcha_handler=captcha_handler
-        )
+        vk_session: vk_api.VkApi = vk_api.VkApi(login=VK_LOGIN, token=VK_TOKEN, password=VK_PASSWORD)
+        #vk_session: vk_api.VkApi = vk_api.VkApi(
+        #    login=VK_LOGIN, 
+        #    password=VK_PASSWORD, 
+        #    captcha_handler=captcha_handler
+        #)
         vk_session.auth()
         return vk_session.get_api()
     
