@@ -2,14 +2,12 @@ import os
 import logging
 from logging import handlers
 
-from bot.data.config import LOGS_FOLDER
-
 
 def configure_logger():
-# Create a logger
+    # Create a logger
     logging.basicConfig(level=logging.DEBUG)
     # Create a folder for log files
-    log_folder = LOGS_FOLDER
+    log_folder = os.path.join('bot', 'data', 'logs', 'python_logs')
     if not os.path.exists(log_folder):
         os.makedirs(log_folder)
     # Create a rotating file handler

@@ -7,22 +7,14 @@ from dotenv import (
 
 
 load_dotenv(find_dotenv())
-DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 
-VK_TOKEN = os.getenv('VK_TOKEN')
 VK_LOGIN = os.getenv('VK_LOGIN')
 VK_PASSWORD = os.getenv('VK_PASSWORD')
 VK_GROUP_ID = os.getenv('VK_GROUP_ID')
-APP_ID = os.getenv('APP_ID')
-USER_AGENT = os.getenv('USER_AGENT')
-IP_TOKEN = os.getenv('IP_TOKEN')
-PROXY_ADDRESS = 'http://' + os.getenv('PROXY_ADDRESS')
-COGS_FOLDER = os.getenv('COGS_FOLDER')
-LOGS_FOLDER = os.getenv('LOGS_FOLDER')
-
-GUILD_ID = int(os.getenv('GUILD_ID'))
-CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
 
 
-
-
+DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+if 0:
+    CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
+else:
+    CHANNEL_ID = int(os.getenv('TEST_CHANNEL_ID'))

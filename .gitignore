@@ -1,11 +1,6 @@
 __pycache__
 logs
-python_logs
 .env
 
 setup.cfg
 vk_config.v2.json
-
-music_cog2.py3
-test.py
-file2.txt
